@@ -1,0 +1,45 @@
+sql1
+
+SELECT *
+FROM scores
+WHERE exam_id !=1 AND scores.score>=80
+ORDER BY scores.score DESC
+
+
+sql2
+
+SELECT U.id , U.name , COUNT(E.class_id) AS numOfUsersExam
+FROM users U , exams E
+WHERE U.id = E.id
+
+
+sql3 
+
+
+
+SELECT E.name , AVG(S.score) AS averageScore , MAX(S.score) AS highScore
+FROM exams E , scores S
+WHERE E.id = S.id
+
+
+sql4 
+
+SELECT U.name AS userName , E.name AS examName , C.name AS className , S.score AS score
+FROM users U , exams E , classes C , scores S
+WHERE U.id = E.id AND E.id = C.id AND C.id = S.id
+
+
+sql5
+
+SELECT U.name AS userName , E.name AS examName , C.name AS className , S.score AS score
+FROM users U , exams E , classes C , scores S
+WHERE U.id = E.id AND E.id = C.id AND C.id = S.id
+AND S.score >=90
+AND U.id != 1
+
+
+[あなたのコードがどのように動作するのか、簡潔に説明してください。]
+[Write a brief explanation about how your code works here.]
+可読性が高くなるように、なるべく単純にかつ同様な書きました。また、5つの問題でテーブル名が共通なものは、共通した略称をつけて、混乱しないように書きました。
+大きな問題やつまずいた箇所はなかったのですが、強いて言えば、少し表記方法を忘れていたことです。
+SQLの基本的な書き方を調べて解決しました。。
