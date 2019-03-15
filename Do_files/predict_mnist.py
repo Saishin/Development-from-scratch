@@ -18,11 +18,7 @@ def predict_NN():
 
     epochs = 5
 
-    '''
-    データを最大値の255で割り、0~1の範囲にする
-    '''
-
-
+    #データを最大値の255で割り、0~1の範囲にする
     ##train
     for e in range(epochs):
         for data in mnist_train:
