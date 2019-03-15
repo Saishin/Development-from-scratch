@@ -35,8 +35,8 @@ class SVM():
         # サポートベクトルのインデックスを抽出
         S = []
         for i in range(len(a)):
-            if a[i] < 0.00001: continue
-            S.append(i)
+            if a[i] != 0:
+                S.append(i)
 
         # wを計算
         self.w = np.zeros(2)
