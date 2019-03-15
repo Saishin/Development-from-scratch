@@ -15,7 +15,6 @@ class NN():
         self.output_node  = output_node
 
         ##各レイヤー間の重みの設定
-        ##各重みを(output , input)のshapeで定義しているのは、error更新の際に重みの行列を転置して、各ノードの誤差計算をするため
         self.between_input_hidden = np.random.normal(.0 , np.sqrt(2/self.input_node) ,(self.hidden_node , self.input_node) )
         self.between_hidden_output = np.random.normal( .0 , np.sqrt(2/self.hidden_node)  ,(self.output_node , self.hidden_node))
 
