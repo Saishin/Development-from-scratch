@@ -5,13 +5,6 @@ from Neural_net_model import NN
 
 def predict_NN():
 
-    '''
-    <<他のファイルのclassを使ったモデリング方法>>
-    他のファイルのclassを読み出す時は、classを書いたファイルはclassを実行するだけにする
-    そして、同じディレクトリor指定ディレクトリから通常のモジュールと同様にimportして使う
-    また、読み込んで使うclassの引数は全ての実行を行うファイルで指定して使用する
-    '''
-
     mnist_train = np.array(pd.read_csv('/Users/shintaro/Downloads/mnist-in-csv/mnist_train.csv', engine='python'))
     mnist_test = np.array(pd.read_csv('/Users/shintaro/Downloads/mnist-in-csv/mnist_test.csv', engine='python'))
 
