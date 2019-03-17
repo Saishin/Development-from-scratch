@@ -2,6 +2,10 @@ import numpy as np
 from SVM import SVM
 
 def predict_SVM():
+    
+    '''
+    データ作成とモデルフィッティング
+    '''
     N = 2000
     cls1 = np.random.randn(1000,2)
     cls2 = np.random.randn(1000,2)+np.array([5,5])
@@ -15,7 +19,6 @@ def predict_SVM():
     for i in range(int(N/2)):
         T.append(-1.0)
     T = np.array(T)
-
 
     ##モデルフィッティング
     model = SVM()

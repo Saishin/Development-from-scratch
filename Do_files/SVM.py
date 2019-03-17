@@ -16,21 +16,18 @@ class SVM():
             for j in range(X.shape[0]):
                 m[i , j] = T[i] * T[j] * np.dot(X[i] , X[j])
 
-         ##作成された行列を30x30へ
+        ##行列を定義する
         P = matrix(m)
-        ##残りの行列を定義
         q = matrix(np.array([-1.0 for i in range(X.shape[0])]))
         G = matrix(-1.0*np.eye(X.shape[0]))
         h = matrix(np.array([.0 for i in range(X.shape[0])]))
         A = matrix(T , (1,T.shape[0]))
         b = matrix(0.0)
 
-        #self.P = P
 
         ##二次計画法で解く。
         sol=cvxopt.solvers.qp(P,q,G,h,A,b)
         a = np.array(sol['x'])
-        #self.a = a
 
         # サポートベクトルのインデックスを抽出
         S = []
@@ -51,7 +48,6 @@ class SVM():
                 temp += a[m] * T[m] * np.dot(X[n], X[m])
             sums += (T[n] - temp)
         self.w0 = sums / len(S)
-
 
         return self
 
