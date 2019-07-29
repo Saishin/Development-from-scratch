@@ -51,6 +51,68 @@ def get_base_args():
     ps = argparse.ArgumentParse(description='ML Test')
     ps.add_argument('--input data','-i',help='Train File')
     ps.add_argument('--separator','-s',help='CSV separator')
-    ps.add_argument('--heder row','-e',help='header row')
-    ps.add_argument('--header index','-x',help='header index')
-    ps.add_argument('--reg')
+    ps.add_argument('--heder row','-e',help='CSV header')
+    ps.add_argument('--header index','-x',help='CSV index_col')
+    ps.add_argument('--regression','-r',help='Regression')
+    ps.add_argument('--crossvalidate','-c',help='use cross validation')
+    retrun ps
+
+def report_classifer(plf,x,y,clz,cv=Ture):
+    '''
+    plf:モデル
+    x:input data
+    y:target data
+    clz:クラス名
+    cv:クロスバリデーションの有無
+    '''
+    import warnings
+    from sklearn.metrics import classification_report,f1_score,accuracy_score
+    from sklearn.exceptions import UnderfinedMetricWarning
+    from sklearn.model_selection import KFold
+    if not cv:
+        ##クロスバリデーションなしの時のモデルスコア
+        plf.fit(x,y)
+        print('Model')
+        print(str(plf))
+        z = plf.predict(x)
+        z = z.argmax(axis=1)
+        y = y.argmax(axis=1)
+        with warnings.cath_warnings():
+            warnings.simplefiter('ignore',category=UnderfinedMetricWarning)
+            ##各ラベルごとの評価指標を見る
+            report = classification_report(y,z,target_names=clz)
+        print('Train score')
+        print(report)
+
+    else:
+        ##交差検証のスコアを示す
+        ##分割したデータの個数で平均を取り、その値で評価
+        kf = KFold(n_split = 10,random_state=1,shuffle=True)
+        f1=[]
+        acc=[]
+        n=[]
+        for train_index,test_index in kf.split(x):
+            x_train,x_test = x[train_index],x[test_index]
+            y_train,y_test = y[train_index],y[test_index]
+            plf.fit(x_train,y_train)
+            z = plf.predict(x_test)
+            z = z.argmax(axis=1)
+            y_test = y_test.argmax(axis=1)
+            f1.append(f1_score(y_test,z,average='weighted'))
+            acc.append(accuracy_score(y_test,z))
+            n.append(len(x_test/len(x)))
+        print('CV score')
+        print('f1_score = %f'%(np.average(f1,weights=n)))
+        print('Accuracy score%f'%(np.average(acc,weights=n)))
+
+def report_regression(plf,x,y,cv=True):
+    '''
+    回帰を行うための評価関数
+    '''
+    from sklearn.metrics import r2_score,explained_variance_score,mean_absolute_error,mean_squared_error
+    from sklearn.model_selection import KFold
+    if not cv:
+        ##交差検証なしのモデリングコード
+
+    else:
+        ##交差検証ありのモデリングコード
