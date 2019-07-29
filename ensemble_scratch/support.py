@@ -64,6 +64,7 @@ def report_classifer(plf,x,y,clz,cv=Ture):
     y:target data
     clz:クラス名
     cv:クロスバリデーションの有無
+    n:各クロスバリデーションの結果をデータセット量に応じて、重み付け
     '''
     import warnings
     from sklearn.metrics import classification_report,f1_score,accuracy_score
@@ -108,11 +109,40 @@ def report_classifer(plf,x,y,clz,cv=Ture):
 def report_regression(plf,x,y,cv=True):
     '''
     回帰を行うための評価関数
+    n:各クロスバリデーションの結果をデータセット量に応じて、重み付け
     '''
     from sklearn.metrics import r2_score,explained_variance_score,mean_absolute_error,mean_squared_error
     from sklearn.model_selection import KFold
     if not cv:
         ##交差検証なしのモデリングコード
+        plf.fit(x,y)
+        print('Model')
+        print(str(plf))
+        z = plf.predict(x)
+        print('Train score')
+        r2 = r2_score(y,z)
+        print('R2 score:%f'%r2)
+        ev = explained_variance_score(y,z)
+        print('explained_variance_score:%f'%ev)
+        mean_ab_error = mean_absolute_error(y,z)
+        print('mean absolute error:%f'%mean_ab_error)
+        mean_sq_error = mean_squared_error(y,z)
+        print('mean_squared_error:%f'%mean_sq_error)
 
     else:
         ##交差検証ありのモデリングコード
+        kf = KFold(n_split=10,random_state=1,shuffle=True)
+        r2=[]
+        mean_sq=[]
+        n=[]
+        for train_index,test_index in kf.split(x):
+            x_train,x_test = x[train_index],x[test_index]
+            y_train,y_test = y[train_index],y[test_index]
+            plf.fit(x_train,y_train)
+            z = plf.predict(x_test)
+            r2.append(r2_score(y_test,z))
+            mean_sq.append(mean_squared_error(y_test,z))
+            n.append(len(x_test)/len(x))
+        print('CV score')
+        print('R2 score = %f'%np.average(r2,weights=n))
+        print('mean squared error = %f'%np.average(mean_sq,weights=n))
