@@ -50,11 +50,11 @@ def get_base_args():
 
     ps = argparse.ArgumentParse(description='ML Test')
     ps.add_argument('--input data','-i',help='Train File')
-    ps.add_argument('--separator','-s',help='CSV separator')
-    ps.add_argument('--heder row','-e',help='CSV header')
-    ps.add_argument('--header index','-x',help='CSV index_col')
-    ps.add_argument('--regression','-r',help='Regression')
-    ps.add_argument('--crossvalidate','-c',help='use cross validation')
+    ps.add_argument('--separator','-s',default=',',help='CSV separator')
+    ps.add_argument('--header','-e',type=int,default='None',help='CSV header')
+    ps.add_argument('--index_col','-x',type=int,default=None,help='CSV index_col')
+    ps.add_argument('--regression','-r',action='store_true',help='Regression')
+    ps.add_argument('--crossvalidate','-c',action='store_true',help='use cross validation')
     retrun ps
 
 def report_classifer(plf,x,y,clz,cv=Ture):
@@ -106,7 +106,7 @@ def report_classifer(plf,x,y,clz,cv=Ture):
         print('f1_score = %f'%(np.average(f1,weights=n)))
         print('Accuracy score%f'%(np.average(acc,weights=n)))
 
-def report_regression(plf,x,y,cv=True):
+def report_regressor(plf,x,y,cv=True):
     '''
     回帰を行うための評価関数
     n:各クロスバリデーションの結果をデータセット量に応じて、重み付け
