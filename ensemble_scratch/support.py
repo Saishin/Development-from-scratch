@@ -14,7 +14,7 @@ def clz_to_prob(clz, scratch=True):
     if scratch:
         ##完全にスクラッチで書くver
         l = list(set(clz))
-        m = [l.index for c in clz]
+        m = [l.index(c) for c in clz]
         z = np.zeros((len(clz),len(l)))
         for i,j in enumerate(m):
             z[i,j] = 1.0
@@ -48,16 +48,16 @@ def get_base_args():
     '''
     import argparse
 
-    ps = argparse.ArgumentParse(description='ML Test')
-    ps.add_argument('--input data','-i',help='Train File')
+    ps = argparse.ArgumentParser(description='ML Test')
+    ps.add_argument('--input','-i',help='Train File')
     ps.add_argument('--separator','-s',default=',',help='CSV separator')
-    ps.add_argument('--header','-e',type=int,default='None',help='CSV header')
-    ps.add_argument('--index_col','-x',type=int,default=None,help='CSV index_col')
+    ps.add_argument('--header','-e',type=int,default=None,help='CSV header')
+    ps.add_argument('--indexcol','-x',type=int,default=None,help='CSV index_col')
     ps.add_argument('--regression','-r',action='store_true',help='Regression')
     ps.add_argument('--crossvalidate','-c',action='store_true',help='use cross validation')
-    retrun ps
+    return ps
 
-def report_classifer(plf,x,y,clz,cv=Ture):
+def report_classifer(plf,x,y,clz,cv=True):
     '''
     plf:モデル
     x:input data
@@ -68,7 +68,7 @@ def report_classifer(plf,x,y,clz,cv=Ture):
     '''
     import warnings
     from sklearn.metrics import classification_report,f1_score,accuracy_score
-    from sklearn.exceptions import UnderfinedMetricWarning
+    from sklearn.exceptions import UndefinedMetricWarning
     from sklearn.model_selection import KFold
     if not cv:
         ##クロスバリデーションなしの時のモデルスコア
@@ -78,8 +78,8 @@ def report_classifer(plf,x,y,clz,cv=Ture):
         z = plf.predict(x)
         z = z.argmax(axis=1)
         y = y.argmax(axis=1)
-        with warnings.cath_warnings():
-            warnings.simplefiter('ignore',category=UnderfinedMetricWarning)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore',category=UndefinedMetricWarning)
             ##各ラベルごとの評価指標を見る
             report = classification_report(y,z,target_names=clz)
         print('Train score')
@@ -88,7 +88,7 @@ def report_classifer(plf,x,y,clz,cv=Ture):
     else:
         ##交差検証のスコアを示す
         ##分割したデータの個数で平均を取り、その値で評価
-        kf = KFold(n_split = 10,random_state=1,shuffle=True)
+        kf = KFold(n_splits = 10,random_state=1,shuffle=True)
         f1=[]
         acc=[]
         n=[]
@@ -131,7 +131,7 @@ def report_regressor(plf,x,y,cv=True):
 
     else:
         ##交差検証ありのモデリングコード
-        kf = KFold(n_split=10,random_state=1,shuffle=True)
+        kf = KFold(n_splits=10,random_state=1,shuffle=True)
         r2=[]
         mean_sq=[]
         n=[]

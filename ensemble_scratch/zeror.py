@@ -14,7 +14,7 @@ class ZeroRule():
         self.r = None
 
     def fit(self,x,y):
-        selr.r = np.mean(y,axis=0)
+        self.r = np.mean(y,axis=0)
         return self.r
 
     def predict(self,x):
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     ps = support.get_base_args()
     args = ps.parse_args()
 
-    df = pd.read_csv(args.input, sep=args.separator,header=args.header,index=args.indexcol)
+    df = pd.read_csv(args.input, sep=args.separator,header=args.header,index_col=args.indexcol)
     x = df[df.columns[:-1]].values
 
     if not args.regression:
